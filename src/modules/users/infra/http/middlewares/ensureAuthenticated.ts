@@ -24,10 +24,6 @@ export default function ensureAuthenticated(
   const [, token] = authHeader.split(' ');
 
   try {
-    if(!authConfig.jwt.secret) {
-      throw Error ('Secret is missing')
-    }
-
     const decoded = verify(token, authConfig.jwt.secret);
 
     const { sub } = decoded as TokenPayload;

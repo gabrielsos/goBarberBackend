@@ -43,9 +43,7 @@ class AuthenticateUserService {
 
     const { secret, expiresIn } = authConfig.jwt;
 
-    if(!secret) {
-      throw Error ('Secret is missing')
-    }
+    console.log(secret);
 
     const token = sign({}, secret, {
       subject: user.id,
