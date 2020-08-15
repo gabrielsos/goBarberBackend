@@ -2,8 +2,8 @@ node_modules/
 build/
 ormconfig.json
 .env
-.DS_Store
-coverage
+.DS_Store/
+coverage/
 temp/
 
 tmp/*
