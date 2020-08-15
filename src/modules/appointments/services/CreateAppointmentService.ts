@@ -7,6 +7,7 @@ import Appointment from '@modules/appointments/infra/typeorm/entities/Appointmen
 
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 
 interface IRequest {
   date: Date;
@@ -22,9 +23,10 @@ class CreateAppointmentService {
 
     @inject('NotificationsRepository')
     private notificationsRepository: INotificationsRepository,
-  ) {
 
-  }
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider
+  ) {}
 
   public async execute({ providerId, date, userId }: IRequest): Promise<Appointment> {
 
@@ -38,7 +40,6 @@ class CreateAppointmentService {
       throw new AppError(`You can't create an appointment with yourself`)
     }
 
-    console.log(getHours(appointmentDate));
     if (getHours(appointmentDate) < 8 || getHours(appointmentDate) > 17) {
       throw new AppError('You can only create appointments inside the bussiness hour')
     }
@@ -62,6 +63,12 @@ class CreateAppointmentService {
       recipient_id: providerId,
       content: `Novo agendamento para dia ${dateFormated}!`,
     })
+
+    console.log(`provider-appointments:${providerId}:${format(appointmentDate, 'yyyy-M-d')}`)
+
+    await this.cacheProvider.invalidate(
+      `provider-appointments:${providerId}:${format(appointmentDate, 'yyyy-M-d')}`
+    );
 
     return appointment;
   }

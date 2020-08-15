@@ -48,9 +48,6 @@ export default class ListProviderDayAvailabilityService {
 
       const compareDate = new Date(year, month - 1, day, hour);
       
-      console.log(appointments);
-      console.log(!hasAppointmentInHour, isAfter(compareDate, currentDate))
-
       return {
         hour,
         available: !hasAppointmentInHour && isAfter(compareDate, currentDate),
