@@ -1,5 +1,10 @@
-node_modules
-build
-npm-debug.log
+node_modules/
+build/
+ormconfig.json
 .env
 .DS_Store
+coverage
+temp/
+
+tmp/*
+!tmp/.gitkeep
