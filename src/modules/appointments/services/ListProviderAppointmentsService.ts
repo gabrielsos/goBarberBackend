@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 import Appointment from '../infra/typeorm/entities/Appointment';
+import { classToClass } from 'class-transformer';
 
 interface IRequest {
   providerId: string;
@@ -28,7 +29,6 @@ export default class ListProviderAppointmentsService {
     year
   }: IRequest): Promise<Appointment[]> {
     const cacheKey = `provider-appointments:${providerId}:${year}-${month}-${day}`;
-    console.log(cacheKey);
     let appointments = await this.cacheProvider.recover<Appointment[]>(cacheKey);
 
     if (!appointments) {
@@ -38,8 +38,8 @@ export default class ListProviderAppointmentsService {
         month,
         year
       });
-      console.log('buscoudo banco')
-      await this.cacheProvider.save(cacheKey, appointments);
+      
+      await this.cacheProvider.save(cacheKey, classToClass(appointments));
     }
     
     return appointments;
