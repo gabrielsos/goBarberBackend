@@ -6,6 +6,7 @@ import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointment
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import IFindAllInMonthFromProviderDTO from '@modules/appointments/dtos/IFindAllInMonthFromProviderDTO';
 import IFindAllInDayFromProvider from '@modules/appointments/dtos/IFindAllInDayFromProviderDTO';
+import { date } from '@hapi/joi';
 
 class AppointmentsRepository implements IAppointmentsRepositoty {
   private ormRepository: Repository<Appointment>;
@@ -35,7 +36,7 @@ class AppointmentsRepository implements IAppointmentsRepositoty {
         date: Raw(dateFieldName => 
           `to_char(${dateFieldName}, 'MM-YYYY') = '${parsedMonth} - ${year}'`
         )
-      },
+      }
     })
 
     return appointments;
@@ -56,6 +57,9 @@ class AppointmentsRepository implements IAppointmentsRepositoty {
         date: Raw(dateFieldName => 
           `to_char(${dateFieldName}, 'YYYY-MM-DD') = '${year}-${parsedMonth}-${parsedDay}'`
         )
+      },
+      order: {
+        date: 'ASC',
       },
       relations: ['user']
     })
